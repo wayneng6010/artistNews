@@ -31,7 +31,7 @@ app.get("/getArtist", (req, res) => {
 			// 	res.status(200).json("Not found");
 			// 	return;
 			// }
-			res.send(response.data.data);
+			res.send(response.data);
 			// artist
 			// 	.save()
 			// 	.then((response) => {

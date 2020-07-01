@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import "./App.css";
 import axios from "axios";
 import Popup from "react-popup";
-// import './Popup.css';
+import "./Popup.css";
 
 // import bootstrap component
-import Jumbotron from "react-bootstrap/Jumbotron";
+// import Jumbotron from "react-bootstrap/Jumbotron";
 
 class App extends Component {
 	constructor() {
@@ -50,11 +50,7 @@ class App extends Component {
 			.get(query)
 			.then((result) => {
 				console.log(result);
-				if (result.data === "Not found") {
-					Popup.alert("Artist Not Found");
-				}
-				this.setState({ items: result.data });
-				// this.getAllArtist();
+				this.setState({ items: result.data.data });
 			})
 			.catch((error) => {
 				alert("Error: ", error);
@@ -63,20 +59,32 @@ class App extends Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
+		// empty input
+		if (this.state.search === "") {
+			Popup.alert("Empty input");
+			return;
+		}
 		const query = `/getArtist?artist_search=${this.state.search}`;
 		console.log(query);
 		axios
 			.get(query)
 			.then((result) => {
 				console.log(result);
-				if (result.data === "Not found") {
+				// no result
+				if (result.data.total === 0) {
 					Popup.alert("Artist Not Found");
+					return;
 				}
-				this.setState({ items: result.data });
-				// this.getAllArtist();
+				// api error
+				// if api return contains 'error' object
+				if ("error" in result.data) {
+					Popup.alert("Error: " + result.data.error.type + " -> " + result.data.error.message);
+					return;
+				}
+				this.setState({ items: result.data.data });
 			})
 			.catch((error) => {
-				alert("Error: ", error);
+				console.log(error);
 			});
 	};
 
@@ -87,7 +95,7 @@ class App extends Component {
 	};
 
 	render() {
-		var { isLoaded, items, search } = this.state;
+		var { isLoaded, items } = this.state;
 
 		// if (!isLoaded) {
 		// 	return <div>Loading...</div>;
@@ -99,7 +107,11 @@ class App extends Component {
 				<div class="header">
 					<div>
 						{/* Manage button */}
-						<a href="#"><button id="manage_btn" class="btn btn-success btn-lg">Manage</button></a>
+						<a href="#">
+							<button id="manage_btn" class="btn btn-success btn-lg">
+								Manage
+							</button>
+						</a>
 						{/* Page title */}
 						<h1 class="m-0 p-0">Artist and News API</h1>
 						<p class="m-0 p-0">Discover your favourite artist and their news</p>
