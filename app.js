@@ -46,6 +46,41 @@ app.get("/getArtist", (req, res) => {
 		});
 });
 
+//localhost:5000/getArtistTopTrack?artist_id=artistID
+app.get("/getArtistTopTrack", (req, res) => {
+	
+	const artist_id = req.query.artist_id;
+
+	const querystr = `https://api.deezer.com/artist/${artist_id}/top`;
+
+	axios
+		.get(querystr)
+		.then((response) => {
+			res.send(response.data);
+		})
+		.catch((error) => {
+			res.status(400).json(error);
+		});
+});
+
+//localhost:5000/getArtistTopTrack?artist_id=artistID
+app.get("/getArtistRelatedNews", (req, res) => {
+	
+	const artist_name = req.query.artist_name;
+	const apikey_news = "fbeba8d45b5c49e88f83dbb9b40cbe48";
+
+	const querystr = `https://newsapi.org/v2/everything?q="${artist_name}"&apiKey=${apikey_news}`;
+
+	axios
+		.get(querystr)
+		.then((response) => {
+			res.send(response.data);
+		})
+		.catch((error) => {
+			res.status(400).json(error);
+		});
+});
+
 // post search history from database
 app.post("/searchHistory", async (req, res) => {
 	var data = await Search.find({});

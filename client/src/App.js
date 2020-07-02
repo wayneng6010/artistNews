@@ -4,8 +4,11 @@ import axios from "axios";
 import Popup from "react-popup";
 import "./Popup.css";
 
+// use link this page to another page
+import { Link } from "react-router-dom";
+
 // import bootstrap component
-// import Jumbotron from "react-bootstrap/Jumbotron";
+import Spinner from "react-bootstrap/Spinner";
 
 class App extends Component {
 	constructor() {
@@ -27,11 +30,9 @@ class App extends Component {
 			.get("/getAllArtist")
 			.then((result) => {
 				this.setState({
-					isLoaded: true,
+					// isLoaded: true,
 					//items: result.data,
 				});
-				//alert(this.state.items.data[0].id);
-				//console.log(this.state.items[0]);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -43,45 +44,54 @@ class App extends Component {
 		this.getAllArtist();
 	}
 
-	startup = () => {
+	startup = async () => {
 		const query = `/getArtist?artist_search=${this.state.search}`;
 		console.log(query);
-		axios
+		await axios
 			.get(query)
 			.then((result) => {
 				console.log(result);
-				this.setState({ items: result.data.data });
+				this.setState({ isLoaded: true, items: result.data.data });
 			})
 			.catch((error) => {
 				alert("Error: ", error);
 			});
 	};
 
-	handleSubmit = (e) => {
+	handleSubmit = async (e) => {
 		e.preventDefault();
 		// empty input
-		if (this.state.search === "") {
+		if (this.state.search.trim() === "") {
 			Popup.alert("Empty input");
 			return;
+		} else {
+			this.setState({ isLoaded: false });
 		}
 		const query = `/getArtist?artist_search=${this.state.search}`;
 		console.log(query);
-		axios
+		await axios
 			.get(query)
 			.then((result) => {
 				console.log(result);
 				// no result
 				if (result.data.total === 0) {
 					Popup.alert("Artist Not Found");
+					this.setState({ isLoaded: true });
 					return;
 				}
 				// api error
 				// if api return contains 'error' object
 				if ("error" in result.data) {
-					Popup.alert("Error: " + result.data.error.type + " -> " + result.data.error.message);
+					Popup.alert(
+						"Error: " +
+							result.data.error.type +
+							" -> " +
+							result.data.error.message
+					);
+					this.setState({ isLoaded: true });
 					return;
 				}
-				this.setState({ items: result.data.data });
+				this.setState({ isLoaded: true, items: result.data.data });
 			})
 			.catch((error) => {
 				console.log(error);
@@ -116,14 +126,13 @@ class App extends Component {
 						<h1 class="m-0 p-0">Artist and News API</h1>
 						<p class="m-0 p-0">Discover your favourite artist and their news</p>
 						{/* Search bar */}
+						<br />
 						<div class="search d-flex justify-content-center">
 							<div className="col-sm-8">
-								<br />
 								{/* <p>Search item: {search}</p> */}
 								<form
 									name="search_form"
 									id="search_form"
-									class="mt-4"
 									onSubmit={this.handleSubmit}
 								>
 									{/* input group */}
@@ -148,17 +157,19 @@ class App extends Component {
 								</form>
 								<br />
 							</div>
-
+							{/* popup box to alert user */}
 							<div>
 								<Popup />
 							</div>
 						</div>
+						{/* Loading Spinner */}
+						{isLoaded ? "" : <Spinner animation="border" variant="light" />}
 					</div>
 				</div>
 				<div class="result pt-5">
 					{/* loop through array of objects */}
 					{items.map((item) => (
-						<a class="a_item" href="#">
+						<Link to={{ pathname: `/eachArtist/${item.id},${item.name}` }}>
 							<div class="item" key={item.id}>
 								<img
 									class="item_head"
@@ -174,7 +185,7 @@ class App extends Component {
 												? item.name
 												: item.name.substring(0, 35) + "..."}
 										</h5>
-										<div class="">
+										<div>
 											<p class="fansNum d-inline-block w-50 text-center">
 												{item.nb_fan}
 												<span>&nbsp;Fans</span>
@@ -187,7 +198,7 @@ class App extends Component {
 									</div>
 								</div>
 							</div>
-						</a>
+						</Link>
 					))}
 				</div>
 			</div>

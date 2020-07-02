@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap");
 
 .App {
 	text-align: center;
@@ -40,20 +40,20 @@
 }
 
 #manage_btn {
-  position: absolute;
-  right: 3%;
-  top: 30px;
-  width: 200px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	position: absolute;
+	right: 3%;
+	top: 30px;
+	width: 200px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .header {
-  background-image: url(https://thumbs.gfycat.com/PolishedFarawayElk-size_restricted.gif);
+	background-image: url(https://thumbs.gfycat.com/PolishedFarawayElk-size_restricted.gif);
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-attachment: fixed;
 	background-position-y: -200px;
-  display: flex;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 400px;
@@ -61,28 +61,28 @@
 
 .header h1 {
 	text-shadow: 4px 4px 8px black;
-	font-family: 'Kalam', cursive;
+	font-family: "Kalam", cursive;
 	font-size: 110px;
 	color: white;
-  text-align: center;
-  width: 100%;
-  line-height: .9;
+	text-align: center;
+	width: 100%;
+	line-height: 0.9;
 }
 
 .header p {
-  text-shadow: 2px 2px 4px black;
-  color: white;
-	font-family: 'Kalam', cursive;
-  font-size: 34px;
-  width: 100%;
+	text-shadow: 2px 2px 4px black;
+	color: white;
+	font-family: "Kalam", cursive;
+	font-size: 34px;
+	width: 100%;
 }
 
 .search {
-  height: 100px;
+	height: 60px;
 }
 
-.search form .input-group{
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+.search form .input-group {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .result {
@@ -100,6 +100,18 @@
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
 }
 
+.item.each_news {
+	height: 400px;
+}
+
+.item_head.each_news {
+	height: 250px;
+}
+
+.item_head.each_news img { 
+	/* object-fit: contain; */
+}
+
 .item:hover {
 	filter: brightness(0.9);
 }
@@ -111,14 +123,14 @@ a.a_item:hover {
 .item_body_outer {
 	display: flex;
 	justify-content: center;
-  align-items: center;
-  height: 130px;
+	align-items: center;
+	height: 130px;
 	background-color: white;
 }
 
 .item_body {
-  padding: 10px 0;
-  width: 80%;
+	padding: 10px 0;
+	width: 80%;
 }
 
 .item .name {
@@ -129,12 +141,93 @@ a.a_item:hover {
 .item .fansNum,
 .item .albumNum {
 	color: black;
-  font-weight: bold;
-  margin-bottom: 0;
+	font-weight: bold;
+	margin-bottom: 0;
 }
 
 .item .fansNum span,
 .item .albumNum span {
 	color: grey;
 	font-weight: normal;
+}
+
+.spinner-border {
+	margin-bottom: -30px;
+}
+
+.nav_bar {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	background-color: white;
+	padding: 0 3%;
+}
+
+.nav_bar .back_link {
+	color: #d2a3a9;
+	text-decoration: none;
+	font-size: 24px;
+	line-height: 1.8;
+	display: inline-block;
+	width: 10%;
+}
+
+.nav_bar .back_link img {
+	margin-top: -5px;
+}
+
+.nav_bar .page_title {
+	display: inline-block;
+	text-align: center;
+	width: 80%;
+	font-weight: bold;
+	font-size: 24px;
+	margin-top: 5px;
+}
+
+#eachArtist_body {
+	background-color: #f2f2f2;
+}
+
+#eachArtist_content {
+	padding-top: 70px;
+	background-color: #f2f2f2;
+	width: 90%;
+	display: block;
+	margin: 0 auto;
+}
+
+#top_track, #related_news {
+	border-radius: 10px;
+	padding: 20px;
+	margin: 20px 0;
+	background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.09);
+}
+
+#top_track #top_track_title, #related_news #related_news_title {
+	margin-bottom: 20px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.each_track {
+	display: inline-block;
+	margin: 10px 20px 40px 20px;
+}
+
+.each_track .track_title {
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(0, 0, 0, 0.7);
+	text-align: center;
+}
+
+.each_track .track_recording {
+	text-align: center;
+}
+
+.each_track .track_link {
+	text-align: center;
 }
