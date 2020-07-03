@@ -117,11 +117,11 @@ class App extends Component {
 				<div class="header">
 					<div>
 						{/* Manage button */}
-						<a href="#">
+						<Link to='/savedArtist'>
 							<button id="manage_btn" class="btn btn-success btn-lg">
 								Manage
 							</button>
-						</a>
+						</Link>
 						{/* Page title */}
 						<h1 class="m-0 p-0">Artist and News API</h1>
 						<p class="m-0 p-0">Discover your favourite artist and their news</p>
@@ -170,7 +170,7 @@ class App extends Component {
 					{/* loop through array of objects */}
 					{items.map((item) => (
 						<Link to={{ pathname: `/eachArtist/${item.id},${item.name}` }}>
-							<div class="item" key={item.id}>
+							<div class="item eachArtist" key={item.id}>
 								<img
 									class="item_head"
 									src={item.picture_medium}

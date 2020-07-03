@@ -11,15 +11,14 @@ const Artist = require("./Artist");
 
 //localhost:5000/getArtist?artist_search=artistName
 app.get("/getArtist", (req, res) => {
-	
-	const artist_search = req.query.artist_search == '' ? 'smith' : req.query.artist_search;
+	const artist_search =
+		req.query.artist_search == "" ? "smith" : req.query.artist_search;
 
 	const querystr = `https://api.deezer.com/search/artist?q=${artist_search}`;
 
 	axios
 		.get(querystr)
 		.then((response) => {
-			
 			// const artist = new Artist({
 			// 	ID: response.data.data[0].id,
 			// 	Name: response.data.data[0].name,
@@ -48,7 +47,6 @@ app.get("/getArtist", (req, res) => {
 
 //localhost:5000/getArtistTopTrack?artist_id=artistID
 app.get("/getArtistTopTrack", (req, res) => {
-	
 	const artist_id = req.query.artist_id;
 
 	const querystr = `https://api.deezer.com/artist/${artist_id}/top`;
@@ -65,7 +63,6 @@ app.get("/getArtistTopTrack", (req, res) => {
 
 //localhost:5000/getArtistTopTrack?artist_id=artistID
 app.get("/getArtistRelatedNews", (req, res) => {
-	
 	const artist_name = req.query.artist_name;
 	const apikey_news = "fbeba8d45b5c49e88f83dbb9b40cbe48";
 
@@ -81,10 +78,37 @@ app.get("/getArtistRelatedNews", (req, res) => {
 		});
 });
 
-// post search history from database
-app.post("/searchHistory", async (req, res) => {
-	var data = await Search.find({});
-	res.send(data);
+//localhost:5000/saveArtist?artist_id=artistID
+app.get("/saveArtist", (req, res) => {
+	const artist_id = req.query.artist_id;
+
+	const querystr = `https://api.deezer.com/artist/${artist_id}`;
+
+	axios
+		.get(querystr)
+		.then((response) => {
+			const artist = new Artist({
+				ID: response.data.id,
+				Name: response.data.name,
+				PictureURL: response.data.picture_medium,
+				AlbumNum: response.data.nb_album,
+				FansNum: response.data.nb_fan,
+			});
+
+			artist
+				.save()
+				.then((response) => {
+					res.status(200).json(response);
+				})
+				.catch((error) => {
+					res.status(400).json(error);
+				});
+
+			res.send(response.data);
+		})
+		.catch((error) => {
+			res.status(400).json(error);
+		});
 });
 
 //localhost:5000/getAllArtist
@@ -92,6 +116,7 @@ app.get("/getAllArtist", (req, res) => {
 	Artist.find({})
 		.then((response) => {
 			res.status(200).json(response);
+			// res.send(response.data);
 		})
 		.catch((error) => {
 			res.status(400).json(error);

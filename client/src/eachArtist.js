@@ -50,8 +50,28 @@ class eachArtist extends Component {
 					this.setState({ related_news: "none" });
 					return;
 				}
+				if (result.data.status === "error") {
+					alert("123");
+					this.setState({ related_news: "none" });
+					return;
+				}
 				this.setState({ related_news: result.data.articles });
 				// alert(JSON.stringify(this.state.top_tracks[0].preview));
+			})
+			.catch((error) => {
+				alert("Error: ", error);
+			});
+	};
+
+	saveArtist = () => {
+		// save artist to database
+		const query_save_artist = `/saveArtist?artist_id=${this.state.artist_id}`;
+		console.log(query_save_artist);
+		axios
+			.get(query_save_artist)
+			.then((result) => {
+				console.log(result);
+				alert("Saved Successful");
 			})
 			.catch((error) => {
 				alert("Error: ", error);
@@ -67,7 +87,8 @@ class eachArtist extends Component {
 	render() {
 		var { artist_name, top_tracks, related_news } = this.state;
 		return (
-			<div id="eachArtist_body">
+			<div id="eachArtist_body" class="pb-3">
+				{/* nav bar */}
 				<div class="nav_bar">
 					<Link class="back_link" to="/">
 						<img
@@ -78,55 +99,87 @@ class eachArtist extends Component {
 					</Link>
 					<div class="page_title">{artist_name}</div>
 				</div>
-
+				{/* content */}
 				<div id="eachArtist_content">
+					{/* save button */}
+					<p class="text-right">
+						<Button onClick={this.saveArtist} id="save_artist_btn">
+							&#43;&nbsp;&nbsp;Save This Artist
+						</Button>
+					</p>
 					{/* Top Track */}
 					<div id="top_track">
 						<h3 id="top_track_title">Top Tracks</h3>
-						{top_tracks === "none" ? (
-							<h5>Top track is not available at this moment</h5>
-						) : (
-							top_tracks.map((item) => (
-								<div class="each_track">
-									<p class="track_title">{item.title}</p>
-									<p class="track_recording">
-										<audio controls volume="0.1">
-											<source src={item.preview} type="audio/ogg" />
-										</audio>
-									</p>
-									<div class="track_link">
-										<a href={item.link} target="_blank">
-											<Button variant="primary">Full Song</Button>
-										</a>
+						<p id="top_track_content">
+							{top_tracks === "none" ? (
+								<h5>
+									Top tracks of this artist is not available at the moment
+								</h5>
+							) : (
+								top_tracks.map((item) => (
+									<div class="each_track">
+										<p class="track_title">{item.title}</p>
+										<p class="track_recording">
+											<audio controls volume="0.1">
+												<source src={item.preview} type="audio/ogg" />
+											</audio>
+										</p>
+										<div class="track_link">
+											<a href={item.link} target="_blank">
+												<Button variant="info">Full Song</Button>
+											</a>
+										</div>
 									</div>
-								</div>
-							))
-						)}
+								))
+							)}
+						</p>
 					</div>
 					{/* Related News */}
 					<div id="related_news">
-						<h3 id="related_news_title">Related News</h3>
-						{related_news.map((item) => (
-							<div class="item each_news">
-								<div class="item_head each_news">
-									<img
-										src={item.urlToImage}
-										width="auto"
-										height="100%"
-										alt="News Image"
-									/>
-								</div>
-								<div class="item_body_outer">
-									<div class="item_body">
-										<h5 class="name mb-4">
-											{item.title.length <= 70
-												? item.title
-												: item.title.substring(0, 70) + "..."}
-										</h5>
-									</div>
-								</div>
-							</div>
-						))}
+						<h3 class="mt-2 mb-4" id="related_news_title">
+							Related News
+						</h3>
+						<p id="related_news_content">
+							{related_news == "none" ? (
+								<h5>No related news at the moment</h5>
+							) : (
+								related_news.map((item) => (
+									<a class="each_news_link" href={item.url} target="_blank">
+										<div class="item each_news">
+											<div class="item_head each_news">
+												<img
+													src={item.urlToImage}
+													width="100%"
+													height="auto"
+													alt="News Image"
+												/>
+											</div>
+											<div class="item_body_outer each_news">
+												<div class="item_body">
+													<h5 class="name each_news mt-3 mb-3">
+														{item.title.length <= 200
+															? item.title
+															: item.title.substring(0, 200) + "..."}
+													</h5>
+													<div class="news_source_date">
+														<p class="d-inline-block w-50 text-center">
+															<span class="news_source">
+																{item.source.name}
+															</span>
+														</p>
+														<p class="d-inline-block w-50 text-center">
+															<span class="news_date">
+																{item.publishedAt.substring(0, 10)}
+															</span>
+														</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</a>
+								))
+							)}
+						</p>
 					</div>
 				</div>
 			</div>
