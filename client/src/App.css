@@ -198,6 +198,7 @@ a.a_item:hover,
 	line-height: 1.8;
 	display: inline-block;
 	width: 10%;
+	box-sizing: border-box;
 }
 
 .nav_bar .back_link img {
@@ -211,6 +212,19 @@ a.a_item:hover,
 	font-weight: bold;
 	font-size: 24px;
 	margin-top: 5px;
+	box-sizing: border-box;
+}
+
+#manage_btn2 {
+	height: 40px;
+	line-height: 0.6;
+	margin-top: -8px;
+}
+
+#manage_btn2_outer {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 10%;
 }
 
 #eachArtist_body {

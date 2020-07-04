@@ -78,6 +78,32 @@ class eachArtist extends Component {
 			});
 	};
 
+	// used to check if there is same artist saved in database
+	checkSavedArtist = async () => {
+		// await is to make sure all the code is executed before going to the next line of code
+		var result = await axios
+			.get(`/getSameArtist?artist_id=${this.state.artist_id}`)
+			.then((result) => {
+				console.log(result);
+				if (result.data) {
+					// item existed in database
+					return true;
+				} else {
+					// item not existed in database
+					return false;
+				}
+			})
+			.catch((error) => {
+				alert("Error: ", error);
+			});
+
+		if (result) {
+			alert("Artist has been saved before");
+		} else {
+			this.saveArtist();
+		}
+	};
+
 	componentDidMount = async () => {
 		this.state.artist_id = this.props.match.params.artist_id;
 		this.state.artist_name = this.props.match.params.artist_name;
@@ -98,12 +124,18 @@ class eachArtist extends Component {
 						/>
 					</Link>
 					<div class="page_title">{artist_name}</div>
+					{/* Manage button */}
+						<Link class="manage_btn2_outer" to="/savedArtist">
+							<button id="manage_btn2" variant="light" class="btn btn-success btn-lg">
+								Manage
+							</button>
+						</Link>
 				</div>
 				{/* content */}
 				<div id="eachArtist_content">
 					{/* save button */}
 					<p class="text-right">
-						<Button onClick={this.saveArtist} id="save_artist_btn">
+						<Button onClick={this.checkSavedArtist} id="save_artist_btn">
 							&#43;&nbsp;&nbsp;Save This Artist
 						</Button>
 					</p>

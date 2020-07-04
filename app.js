@@ -116,22 +116,38 @@ app.get("/getAllArtist", (req, res) => {
 	Artist.find({})
 		.then((response) => {
 			res.status(200).json(response);
-			// res.send(response.data);
 		})
 		.catch((error) => {
 			res.status(400).json(error);
 		});
 });
 
-// get record that selected to delete and delete it from database
-app.get("/deleteSearch", async (req, res) => {
-	try {
-		var a = req.query.search;
-		res.send(await Search.findByIdAndDelete(req.query.search));
-	} catch (err) {
-		res.send(err);
-	}
+//localhost:5000/getSameArtist
+app.get("/getSameArtist", (req, res) => {
+	Artist.findOne({ ID: req.query.artist_id })
+		.then((response) => {
+			if(response) {
+				res.send(true);
+			} else {
+				res.send(false);
+			}
+			// res.status(200).json(response);
+		})
+		.catch((error) => {
+			res.status(400).json(error);
+		});
 });
+
+//localhost:5000/deleteArtist?title=MovieTitle
+app.get('/deleteArtist', (req, res) => {
+	Artist.deleteOne({ ID: req.query.artist_id })
+	  .then(response => {
+		res.status(200).json(response);
+	  })
+	  .catch(error => {
+		res.status(400).json(error);
+	  });
+  });
 
 // heroku
 if (process.env.NODE_ENV === "production") {

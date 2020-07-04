@@ -26,11 +26,23 @@ class savedArtist extends Component {
 			.get(query_saved_artist)
 			.then((result) => {
 				console.log(result);
-				// if (result.data === 0) {
-				// 	this.setState({ saved_artist: "none" });
-				// 	return;
-				// }
+				if (result.data == '') {
+					this.setState({ saved_artist: "none" });
+					return;
+				}
 				this.setState({ saved_artist: result.data });
+			})
+			.catch((error) => {
+				alert("Error: ", error);
+			});
+	};
+
+	deleteArtist = (artist_id) => {
+		const query = `/deleteArtist?artist_id=${artist_id}`;
+		axios
+			.get(query)
+			.then((result) => {
+				this.getAllArtist();
 			})
 			.catch((error) => {
 				alert("Error: ", error);
@@ -66,7 +78,7 @@ class savedArtist extends Component {
 						</h3>
 						<div class="result pt-4 pb-2 savedArtist">
 							<p class="text-center">
-								{saved_artist === "" ? (
+								{saved_artist === "none" ? (
 									<h5>No saved artist at the moment</h5>
 								) : (
 									saved_artist.map((item) => (
@@ -95,6 +107,8 @@ class savedArtist extends Component {
 															<span>&nbsp;Albums</span>
 														</p>
 													</div>
+
+													{/* view button  */}
 													<Link
 														class="fansNum d-inline-block w-50 text-center px-2"
 														target="_blank"
@@ -102,17 +116,28 @@ class savedArtist extends Component {
 															pathname: `/eachArtist/${item.ID},${item.Name}`,
 														}}
 													>
-														<Button variant="primary" size="sm" block>View</Button>
+														<Button variant="primary" size="sm" block>
+															View
+														</Button>
 													</Link>
-													<Link
-														class="fansNum d-inline-block w-50 text-center px-2"
-														target="_blank"
-														to={{
-															pathname: `/eachArtist/${item.ID},${item.Name}`,
-														}}
-													>
-														<Button variant="dark" size="sm" block>Delete</Button>
-													</Link>
+
+													{/* delete button  */}
+													<div class="fansNum d-inline-block w-50 text-center px-2">
+														<Button
+															onClick={() => {
+																if (
+																	window.confirm("Delete this artist from bookmark?")
+																) {
+																	this.deleteArtist(item.ID);
+																}
+															}}
+															variant="dark"
+															size="sm"
+															block
+														>
+															Delete
+														</Button>
+													</div>
 												</div>
 											</div>
 										</div>
