@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const db =
 	"mongodb+srv://dbUser:627233@clustertesting-j5vap.mongodb.net/Artist?retryWrites=true&w=majority";
+const path = require("path");
 
 //Connect to MongoDB database
 mongoose
-	.connect(db, { useNewUrlParser: true })
+	.connect(process.env.MONGODB_URI || db, { useNewUrlParser: true })
 	.then(() => {
 		console.log("Connected to database");
 	})
@@ -21,21 +22,13 @@ const artistSchema = new mongoose.Schema({
 	FansNum: { type: Number },
 });
 
-// const newsSchema = new mongoose.Schema({
-// 	ArtistName: { type: String },
-// 	Title: { type: String },
-// 	Desc: { type: String },
-// 	Content: { type: String },
-// 	Source: { type: String },
-// 	Author: { type: String },
-// 	URL: { type: String },
-// 	Image: { type: String },
-// 	PublishedAt: { type: String },
-// });
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static("client/build"));
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+	});
+}
 
 const Artist = mongoose.model("Data", artistSchema);
-//const News = mongoose.model("Data", newsSchema);
-
 module.exports = Artist;
-//module.exports = News;
-

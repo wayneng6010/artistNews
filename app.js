@@ -2,10 +2,6 @@ const express = require("express");
 const app = express();
 const axios = require("axios");
 const Artist = require("./Artist");
-// const News = require("./Artist").News;
-
-//api key
-// const apikey_news = "fbeba8d45b5c49e88f83dbb9b40cbe48";
 
 //calling API
 
