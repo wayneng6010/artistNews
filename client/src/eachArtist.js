@@ -29,8 +29,20 @@ class eachArtist extends Component {
 			.get(query_top_tracks)
 			.then((result) => {
 				console.log(result);
+				// if api return 0 result
 				if (result.data.total === 0) {
 					this.setState({ top_tracks: "none" });
+					return;
+				}
+				// api error
+				// if api return contains 'error' object
+				if ("error" in result.data) {
+					Popup.alert(
+						"Error: " +
+							result.data.error.type +
+							" -> " +
+							result.data.error.message
+					);
 					return;
 				}
 				this.setState({ top_tracks: result.data.data });
@@ -51,7 +63,9 @@ class eachArtist extends Component {
 					return;
 				}
 				if (result.data.status === "error") {
-					alert("123");
+					Popup.alert(
+						"Error: " + result.data.code + " -> " + result.data.message
+					);
 					this.setState({ related_news: "none" });
 					return;
 				}
@@ -125,11 +139,15 @@ class eachArtist extends Component {
 					</Link>
 					<div class="page_title">{artist_name}</div>
 					{/* Manage button */}
-						<Link class="manage_btn2_outer" to="/savedArtist">
-							<button id="manage_btn2" variant="light" class="btn btn-success btn-lg">
-								Manage
-							</button>
-						</Link>
+					<Link class="manage_btn2_outer" to="/savedArtist">
+						<button
+							id="manage_btn2"
+							variant="light"
+							class="btn btn-success btn-lg"
+						>
+							Manage
+						</button>
+					</Link>
 				</div>
 				{/* content */}
 				<div id="eachArtist_content">
@@ -165,6 +183,10 @@ class eachArtist extends Component {
 								))
 							)}
 						</p>
+					</div>
+					{/* popup box to alert user */}
+					<div>
+						<Popup />
 					</div>
 					{/* Related News */}
 					<div id="related_news">

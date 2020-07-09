@@ -19,26 +19,7 @@ app.get("/getArtist", (req, res) => {
 	axios
 		.get(querystr)
 		.then((response) => {
-			// const artist = new Artist({
-			// 	ID: response.data.data[0].id,
-			// 	Name: response.data.data[0].name,
-			// 	PictureURL: response.data.data[0].picture_medium,
-			// 	AlbumNum: response.data.data[0].nb_album,
-			// 	FansNum: response.data.data[0].nb_fan,
-			// });
-			// if (!artist.id) {
-			// 	res.status(200).json("Not found");
-			// 	return;
-			// }
 			res.send(response.data);
-			// artist
-			// 	.save()
-			// 	.then((response) => {
-			// 		res.status(200).json(response);
-			// 	})
-			// 	.catch((error) => {
-			// 		res.status(400).json(error);
-			// 	});
 		})
 		.catch((error) => {
 			res.status(400).json(error);

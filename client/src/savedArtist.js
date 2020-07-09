@@ -125,9 +125,7 @@ class savedArtist extends Component {
 													<div class="fansNum d-inline-block w-50 text-center px-2">
 														<Button
 															onClick={() => {
-																if (
-																	window.confirm("Delete this artist from bookmark?")
-																) {
+																if (window.confirm("Delete this artist from bookmark?")) {
 																	this.deleteArtist(item.ID);
 																}
 															}}
