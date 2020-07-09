@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const app = require("express");
+const app = express();
 const db =
 	"mongodb+srv://dbUser:627233@clustertesting-j5vap.mongodb.net/Artist?retryWrites=true&w=majority";
 const path = require("path");
