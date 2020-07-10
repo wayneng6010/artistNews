@@ -4,6 +4,7 @@ import axios from "axios";
 import Popup from "react-popup";
 import "./Popup.css";
 
+// link this page to another page
 import { Link } from "react-router-dom";
 
 // import bootstrap component
@@ -111,7 +112,7 @@ class savedArtist extends Component {
 													{/* view button  */}
 													<Link
 														class="fansNum d-inline-block w-50 text-center px-2"
-														target="_blank"
+														// target="_blank"
 														to={{
 															pathname: `/eachArtist/${item.ID},${item.Name}`,
 														}}

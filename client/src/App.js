@@ -4,7 +4,7 @@ import axios from "axios";
 import Popup from "react-popup";
 import "./Popup.css";
 
-// use link this page to another page
+// link this page to another page
 import { Link } from "react-router-dom";
 
 // import bootstrap component
