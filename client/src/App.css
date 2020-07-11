@@ -323,3 +323,33 @@ a.a_item:hover,
 .result.savedArtist {
 	border-radius: 10px;
 }
+
+.sorting_outer.artist {
+	height: 70px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+}
+
+.sorting_table {
+	width: 600px;
+	margin: 0 auto;
+	display: inline-block;
+	display:table;
+}
+
+#sortby_title, .sortby_type, #language_title, .language_type {
+	width: 25%;
+	font-size: 18px;
+}
+
+#sortby_title, #language_title {
+	font-weight: bold;
+}
+
+#sortby_row, #language_row {
+	height: 40px;
+}
+
+

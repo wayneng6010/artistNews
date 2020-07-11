@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 
 // import bootstrap component
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 
 // Page for showing the recipe detail for selected food recipe with ingredients and publisher link
 class eachArtist extends Component {
@@ -18,10 +20,13 @@ class eachArtist extends Component {
 			artist_name: null,
 			top_tracks: [],
 			related_news: [],
+			previous_path: null,
+			sortBy: "relevancy",
+			language: "",
 		};
 	}
 
-	startup = () => {
+	getTopTracks = () => {
 		// get top tracks
 		const query_top_tracks = `/getArtistTopTrack?artist_id=${this.state.artist_id}`;
 		console.log(query_top_tracks);
@@ -50,9 +55,11 @@ class eachArtist extends Component {
 			.catch((error) => {
 				alert("Error: ", error);
 			});
+	};
 
+	getRelatedNews = () => {
 		// get related news
-		const query_related_news = `/getArtistRelatedNews?artist_name=${this.state.artist_name}`;
+		const query_related_news = `/getArtistRelatedNews?artist_name=${this.state.artist_name}&sortBy=${this.state.sortBy}&language=${this.state.language}`;
 		console.log(query_related_news);
 		axios
 			.get(query_related_news)
@@ -118,10 +125,24 @@ class eachArtist extends Component {
 		}
 	};
 
+	// language
+	filter_news = (event) => {
+		this.state.language = event.target.value;
+		this.getRelatedNews();
+	};
+
+	// sort by 
+	sort_news = (event) => {
+		this.state.sortBy = event.target.value;
+		this.getRelatedNews();
+	};
+
 	componentDidMount = async () => {
 		this.state.artist_id = this.props.match.params.artist_id;
 		this.state.artist_name = this.props.match.params.artist_name;
-		this.startup();
+		this.state.previous_path = this.props.location.state.previous_path;
+		this.getTopTracks();
+		this.getRelatedNews();
 	};
 
 	render() {
@@ -130,7 +151,7 @@ class eachArtist extends Component {
 			<div id="eachArtist_body" class="pb-3">
 				{/* nav bar */}
 				<div class="nav_bar">
-					<Link class="back_link" to="/">
+					<Link class="back_link" to={this.state.previous_path}>
 						<img
 							src="https://image.flaticon.com/icons/svg/725/725004.svg"
 							width="30"
@@ -193,6 +214,95 @@ class eachArtist extends Component {
 						<h3 class="mt-2 mb-4" id="related_news_title">
 							Related News
 						</h3>
+
+						<p class="sorting_outer text-center">
+							<table class="sorting_table">
+								<tr id="language_row">
+									<td id="language_title">Language</td>
+									<td class="language_type">
+										<div class="form-check">
+											<input
+												class="form-check-input"
+												type="radio"
+												value=""
+												name="language"
+												id="all"
+												onChange={this.filter_news.bind(this)}
+												defaultChecked
+											/>
+											<label class="form-check-label" for="all">
+												All
+											</label>
+										</div>
+									</td>
+									<td class="language_type">
+										<div class="form-check">
+											<input
+												class="form-check-input"
+												type="radio"
+												value="en"
+												name="language"
+												id="en"
+												onChange={this.filter_news.bind(this)}
+											/>
+											<label class="form-check-label" for="en">
+												English
+											</label>
+										</div>
+									</td>
+								</tr>
+								<tr id="sortby_row">
+									<td id="sortby_title">Sort By</td>
+									<td class="sortby_type">
+										<div class="form-check">
+											<input
+												class="form-check-input"
+												type="radio"
+												value="relevancy"
+												name="sorting"
+												id="rel"
+												onChange={this.sort_news.bind(this)}
+												defaultChecked
+											/>
+											<label class="form-check-label" for="rel">
+												Relevance
+											</label>
+										</div>
+									</td>
+									<td class="sortby_type">
+										<div class="form-check">
+											<input
+												class="form-check-input"
+												type="radio"
+												value="popularity"
+												name="sorting"
+												id="pop"
+												onChange={this.sort_news.bind(this)}
+											/>
+											<label class="form-check-label" for="pop">
+												Popularity
+											</label>
+										</div>
+									</td>
+									<td class="sortby_type">
+										<div class="form-check">
+											<input
+												class="form-check-input"
+												type="radio"
+												value="publishedAt"
+												name="sorting"
+												id="lat"
+												onChange={this.sort_news.bind(this)}
+											/>
+											<label class="form-check-label" for="lat">
+												Latest
+											</label>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</p>
+
 						<p id="related_news_content">
 							{related_news == "none" ? (
 								<h5>No related news at the moment</h5>

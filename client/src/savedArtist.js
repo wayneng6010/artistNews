@@ -115,6 +115,7 @@ class savedArtist extends Component {
 														// target="_blank"
 														to={{
 															pathname: `/eachArtist/${item.ID},${item.Name}`,
+															state: { previous_path: '/savedArtist/' } 
 														}}
 													>
 														<Button variant="primary" size="sm" block>

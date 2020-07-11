@@ -17,6 +17,7 @@ class App extends Component {
 			items: [],
 			isLoaded: false,
 			search: "",
+			sortBy: "",
 		};
 
 		// this perform a search with predefined value when user enter this page
@@ -45,7 +46,7 @@ class App extends Component {
 	}
 
 	startup = async () => {
-		const query = `/getArtist?artist_search=${this.state.search}`;
+		const query = `/getArtist?artist_search=${this.state.search}&order=${this.state.sortBy}`;
 		console.log(query);
 		await axios
 			.get(query)
@@ -57,6 +58,11 @@ class App extends Component {
 				alert("Error: ", error);
 			});
 	};
+
+	sort_artist = (event) => {
+		this.state.sortBy = event.target.value;
+		this.startup();
+	}
 
 	handleSubmit = async (e) => {
 		e.preventDefault();
@@ -117,7 +123,7 @@ class App extends Component {
 				<div class="header">
 					<div>
 						{/* Manage button */}
-						<Link to='/savedArtist'>
+						<Link to="/savedArtist">
 							<button id="manage_btn" class="btn btn-success btn-lg">
 								Manage
 							</button>
@@ -166,10 +172,69 @@ class App extends Component {
 						{isLoaded ? "" : <Spinner animation="border" variant="light" />}
 					</div>
 				</div>
+				{/* Sorting */}
+				<p class="sorting_outer text-center artist">
+					<table class="sorting_table">
+						<tr id="sorting_row">
+							<td id="sortby_title">Sort By</td>
+							<td class="sortby_type">
+								<div class="form-check">
+									<input
+										class="form-check-input"
+										type="radio"
+										value="Ranking"
+										name="sorting"
+										id="Ranking"
+										onChange={this.sort_artist.bind(this)}
+										defaultChecked
+									/>
+									<label class="form-check-label" for="Ranking">
+										Ranking
+									</label>
+								</div>
+							</td>
+							<td class="sortby_type">
+								<div class="form-check">
+									<input
+										class="form-check-input"
+										type="radio"
+										value="ARTIST_ASC"
+										name="sorting"
+										id="ARTIST_ASC"
+										onChange={this.sort_artist.bind(this)}
+									/>
+									<label class="form-check-label" for="ARTIST_ASC">
+										A to Z
+									</label>
+								</div>
+							</td>
+							<td class="sorting_type">
+								<div class="form-check">
+									<input
+										class="form-check-input"
+										type="radio"
+										value="ARTIST_DESC"
+										name="sorting"
+										id="ARTIST_DESC"
+										onChange={this.sort_artist.bind(this)}
+									/>
+									<label class="form-check-label" for="ARTIST_DESC">
+										Z to A
+									</label>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</p>
 				<div class="result pt-5">
 					{/* loop through array of objects */}
 					{items.map((item) => (
-						<Link to={{ pathname: `/eachArtist/${item.id},${item.name}` }}>
+						<Link
+							to={{
+								pathname: `/eachArtist/${item.id},${item.name}`,
+								state: { previous_path: "/" },
+							}}
+						>
 							<div class="item eachArtist" key={item.id}>
 								<img
 									class="item_head"

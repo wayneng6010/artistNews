@@ -10,7 +10,9 @@ app.get("/getArtist", (req, res) => {
 	const artist_search =
 		req.query.artist_search == "" ? "smith" : req.query.artist_search;
 
-	const querystr = `https://api.deezer.com/search/artist?q=${artist_search}`;
+	const order = req.query.order;
+
+	const querystr = `https://api.deezer.com/search/artist?q=${artist_search}&order=${order}`;
 
 	axios
 		.get(querystr)
@@ -41,9 +43,11 @@ app.get("/getArtistTopTrack", (req, res) => {
 //localhost:5000/getArtistTopTrack?artist_id=artistID
 app.get("/getArtistRelatedNews", (req, res) => {
 	const artist_name = req.query.artist_name;
+	const sortBy = req.query.sortBy;
+	const language = req.query.language;
 	const apikey_news = "fbeba8d45b5c49e88f83dbb9b40cbe48";
 
-	const querystr = `https://newsapi.org/v2/everything?q="${artist_name}"&apiKey=${apikey_news}`;
+	const querystr = `https://newsapi.org/v2/everything?q="${artist_name}"&apiKey=${apikey_news}&sortBy=${sortBy}&language=${language}`;
 
 	axios
 		.get(querystr)
