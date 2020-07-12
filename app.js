@@ -1,12 +1,18 @@
 const express = require("express");
 const app = express();
 const axios = require("axios");
-const Artist = require("./Artist");
+const Artist = require("./Artist").Artist;
+const User = require("./Artist").User;
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+// verify user token
+const verify = require("./verifyToken");
 
 //calling API
-
 //localhost:5000/getArtist?artist_search=artistName
-app.get("/getArtist", (req, res) => {
+app.get("/getArtist", verify, (req, res) => {
+	console.log("asd");
 	const artist_search =
 		req.query.artist_search == "" ? "smith" : req.query.artist_search;
 
@@ -107,7 +113,7 @@ app.get("/getAllArtist", (req, res) => {
 app.get("/getSameArtist", (req, res) => {
 	Artist.findOne({ ID: req.query.artist_id })
 		.then((response) => {
-			if(response) {
+			if (response) {
 				res.send(true);
 			} else {
 				res.send(false);
@@ -120,15 +126,79 @@ app.get("/getSameArtist", (req, res) => {
 });
 
 //localhost:5000/deleteArtist?title=MovieTitle
-app.get('/deleteArtist', (req, res) => {
+app.get("/deleteArtist", (req, res) => {
 	Artist.deleteOne({ ID: req.query.artist_id })
-	  .then(response => {
-		res.status(200).json(response);
-	  })
-	  .catch(error => {
+		.then((response) => {
+			res.status(200).json(response);
+		})
+		.catch((error) => {
+			res.status(400).json(error);
+		});
+});
+
+//localhost:5000/getSameEmail
+app.get("/getSameEmail", (req, res) => {
+	User.findOne({ email: req.query.email })
+		.then((response) => {
+			console.log(response);
+			if (response) {
+				res.send(true);
+			} else {
+				res.send(false);
+			}
+		})
+		.catch((error) => {
+			res.status(400).json(error);
+		});
+});
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded());
+
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+
+//localhost:5000/register
+app.post("/register", async (req, res) => {
+	// hash password
+	const salt = await bcrypt.genSalt(10);
+	const hashPsw = await bcrypt.hash(req.body.user.psw, salt);
+
+	const user = new User({
+		name: req.body.user.name,
+		email: req.body.user.email,
+		password: hashPsw,
+	});
+	try {
+		const savedUser = await user.save();
+		res.send({ user: user._id });
+	} catch (error) {
 		res.status(400).json(error);
-	  });
-  });
+	}
+});
+
+//localhost:5000/login
+app.post("/login", async (req, res) => {
+	// check if email exist
+	const user = await User.findOne({ email: req.body.user.email });
+	if (!user) {
+		return res.send(false);
+	}
+
+	// check if password correct
+	const validPsw = await bcrypt.compare(req.body.user.psw, user.password);
+	if (!validPsw) {
+		return res.send(false);
+	}
+
+	// create and assign a token
+	const token = jwt.sign({ _id: user._id }, "vE7YWqEuJQOXjlKxU7e4SOl");
+	// res.send(true);
+	res.header("auth-token", token).send(true);
+
+	// if login successful
+	// return res.send(true);
+});
 
 // heroku
 if (process.env.NODE_ENV === "production") {

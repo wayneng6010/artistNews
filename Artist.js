@@ -15,7 +15,7 @@ mongoose
 		console.log("Error Connected to database");
 	});
 
-//A schema matched the table in your database
+// artist schema
 const artistSchema = new mongoose.Schema({
 	ID: { type: Number },
 	Name: { type: String },
@@ -24,13 +24,24 @@ const artistSchema = new mongoose.Schema({
 	FansNum: { type: Number },
 });
 
+// artist schema
+const userSchema = new mongoose.Schema({
+	name: { type: String },
+	email: { type: String },
+	password: { type: String },
+	date: { type: Date, default: Date.now },
+});
+
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static("client/build"));
 
 	app.get("*", (req, res) => {
-		res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+		res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 	});
 }
 
 const Artist = mongoose.model("Data", artistSchema);
-module.exports = Artist;
+const User = mongoose.model("User", userSchema);
+
+module.exports.Artist = Artist;
+module.exports.User = User;

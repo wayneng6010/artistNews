@@ -122,9 +122,15 @@ class App extends Component {
 				{/* Header */}
 				<div class="header">
 					<div>
+						{/* Register button */}
+						<Link to="/register">
+							<button class="manage_btn register btn btn-primary btn-lg">
+								Register
+							</button>
+						</Link>
 						{/* Manage button */}
 						<Link to="/savedArtist">
-							<button id="manage_btn" class="btn btn-success btn-lg">
+							<button class="manage_btn btn btn-success btn-lg">
 								Manage
 							</button>
 						</Link>
@@ -135,7 +141,6 @@ class App extends Component {
 						<br />
 						<div class="search d-flex justify-content-center">
 							<div className="col-sm-8">
-								{/* <p>Search item: {search}</p> */}
 								<form
 									name="search_form"
 									id="search_form"
