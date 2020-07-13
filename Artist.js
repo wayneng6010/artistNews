@@ -22,6 +22,7 @@ const artistSchema = new mongoose.Schema({
 	PictureURL: { type: String },
 	AlbumNum: { type: Number },
 	FansNum: { type: Number },
+	UserID: { type: String }, //to identify saved artist of each user
 });
 
 // artist schema

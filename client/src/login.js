@@ -22,7 +22,7 @@ class login extends Component {
 		const email = this.refs.email.value,
 			psw = this.refs.psw.value;
 
-		fetch("/login", {
+		await fetch("/login", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -35,7 +35,7 @@ class login extends Component {
 			}),
 		})
 			.then((res) => {
-				// console.log(JSON.stringify(res.headers));
+				console.log(JSON.stringify(res.headers));
 				return res.json();
 			})
 			.then((jsonData) => {

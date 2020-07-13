@@ -6,13 +6,16 @@ const User = require("./Artist").User;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// cookie parser
+var cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 // verify user token
 const verify = require("./verifyToken");
 
 //calling API
 //localhost:5000/getArtist?artist_search=artistName
 app.get("/getArtist", verify, (req, res) => {
-	console.log("asd");
 	const artist_search =
 		req.query.artist_search == "" ? "smith" : req.query.artist_search;
 
@@ -80,18 +83,19 @@ app.get("/saveArtist", (req, res) => {
 				PictureURL: response.data.picture_medium,
 				AlbumNum: response.data.nb_album,
 				FansNum: response.data.nb_fan,
+				UserID: req.cookies['uid'],
 			});
 
 			artist
 				.save()
 				.then((response) => {
-					res.status(200).json(response);
+					res.send(response.data);
 				})
 				.catch((error) => {
 					res.status(400).json(error);
 				});
 
-			res.send(response.data);
+			
 		})
 		.catch((error) => {
 			res.status(400).json(error);
@@ -100,7 +104,7 @@ app.get("/saveArtist", (req, res) => {
 
 //localhost:5000/getAllArtist
 app.get("/getAllArtist", (req, res) => {
-	Artist.find({})
+	Artist.find({ UserID: req.cookies['uid'] })
 		.then((response) => {
 			res.status(200).json(response);
 		})
@@ -193,11 +197,16 @@ app.post("/login", async (req, res) => {
 
 	// create and assign a token
 	const token = jwt.sign({ _id: user._id }, "vE7YWqEuJQOXjlKxU7e4SOl");
-	// res.send(true);
-	res.header("auth-token", token).send(true);
 
-	// if login successful
-	// return res.send(true);
+	// save token and user id to cookie
+	res.cookie("auth-token", token);
+	res.cookie("uid", user._id);
+	res.send(true);
+});
+
+app.post("/logout", async (req, res) => {
+	// clear auth-token cookie and user id cookie
+	res.clearCookie("auth-token").clearCookie("uid");
 });
 
 // heroku
