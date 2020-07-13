@@ -48,7 +48,7 @@
 }
 
 .manage_btn.register {
-	right: 15%;
+	right: 300px;
 }
 
 .header {
@@ -61,6 +61,27 @@
 	align-items: center;
 	justify-content: center;
 	height: 400px;
+}
+
+.App.home {
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.header.home {
+	background-image: url(https://coolbackgrounds.io/images/backgrounds/index/sea-edge-79ab30e2.png);
+	position: relative;
+	height: 70vh;
+	width: 100%;
+	background-position-y: -170px;
+}
+
+.register_btn {
+	width: 200px;
+	margin: 30px 40px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .header h1 {
@@ -340,20 +361,23 @@ a.a_item:hover,
 	width: 600px;
 	margin: 0 auto;
 	display: inline-block;
-	display:table;
+	display: table;
 }
 
-#sortby_title, .sortby_type, #language_title, .language_type {
+#sortby_title,
+.sortby_type,
+#language_title,
+.language_type {
 	width: 25%;
 	font-size: 18px;
 }
 
-#sortby_title, #language_title {
+#sortby_title,
+#language_title {
 	font-weight: bold;
 }
 
-#sortby_row, #language_row {
+#sortby_row,
+#language_row {
 	height: 40px;
 }
-
-

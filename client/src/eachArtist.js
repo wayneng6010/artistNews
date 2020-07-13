@@ -20,7 +20,6 @@ class eachArtist extends Component {
 			artist_name: null,
 			top_tracks: [],
 			related_news: [],
-			previous_path: null,
 			sortBy: "relevancy",
 			language: "",
 		};
@@ -131,27 +130,50 @@ class eachArtist extends Component {
 		this.getRelatedNews();
 	};
 
-	// sort by 
+	// sort by
 	sort_news = (event) => {
 		this.state.sortBy = event.target.value;
 		this.getRelatedNews();
 	};
 
 	componentDidMount = async () => {
+		// verify token
+		const query_verify = `/verifyToken`;
+		console.log(query_verify);
+		await axios
+			.get(query_verify)
+			.then((result) => {
+				// alert(result.data);
+				if (
+					result.data === "Access Denied" ||
+					result.data === "Invalid Token"
+				) {
+					alert("You are not logged in");
+					window.location.href = "/login";
+				}
+			})
+			.catch((error) => {
+				alert(error);
+			});
+
 		this.state.artist_id = this.props.match.params.artist_id;
 		this.state.artist_name = this.props.match.params.artist_name;
-		this.state.previous_path = this.props.location.state.previous_path;
 		this.getTopTracks();
 		this.getRelatedNews();
 	};
 
 	render() {
-		var { artist_name, top_tracks, related_news } = this.state;
+		var { artist_name, artist_id, top_tracks, related_news } = this.state;
 		return (
 			<div id="eachArtist_body" class="pb-3">
 				{/* nav bar */}
 				<div class="nav_bar">
-					<Link class="back_link" to={this.state.previous_path}>
+					<Link
+						class="back_link"
+						to={{
+							pathname: `/searchArtist`,
+						}}
+					>
 						<img
 							src="https://image.flaticon.com/icons/svg/725/725004.svg"
 							width="30"
@@ -160,7 +182,12 @@ class eachArtist extends Component {
 					</Link>
 					<div class="page_title">{artist_name}</div>
 					{/* Manage button */}
-					<Link class="manage_btn2_outer" to="/savedArtist">
+					<Link
+						class="manage_btn2_outer"
+						to={{
+							pathname: `/savedArtist`,
+						}}
+					>
 						<button
 							id="manage_btn2"
 							variant="light"

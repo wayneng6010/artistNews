@@ -7,6 +7,7 @@ import eachArtist from "./eachArtist";
 import savedArtist from "./savedArtist";
 import register from "./register";
 import login from "./login";
+import logout from "./logout";
 
 //Router use to route to EachArtist.js page (show detail of selected artist)
 
@@ -19,6 +20,7 @@ const Router = () => (
 			<Route path="/savedArtist/" component={savedArtist} />
 			<Route path="/register/" component={register} />
 			<Route path="/login/" component={login} />
+			<Route path="/logout/" component={logout} />
 			{/* if route not found */}
 			<Route path="*" component={login} />
 		</Switch>

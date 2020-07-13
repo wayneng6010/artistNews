@@ -27,7 +27,7 @@ class savedArtist extends Component {
 			.get(query_saved_artist)
 			.then((result) => {
 				console.log(result);
-				if (result.data == '') {
+				if (result.data == "") {
 					this.setState({ saved_artist: "none" });
 					return;
 				}
@@ -51,6 +51,25 @@ class savedArtist extends Component {
 	};
 
 	componentDidMount = async () => {
+		// verify token
+		const query_verify = `/verifyToken`;
+		console.log(query_verify);
+		await axios
+			.get(query_verify)
+			.then((result) => {
+				// alert(result.data);
+				if (
+					result.data === "Access Denied" ||
+					result.data === "Invalid Token"
+				) {
+					alert("You are not logged in");
+					window.location.href = "/login";
+				}
+			})
+			.catch((error) => {
+				alert(error);
+			});
+
 		this.getAllArtist();
 	};
 
@@ -61,7 +80,12 @@ class savedArtist extends Component {
 			<div id="eachArtist_body" class="pb-3">
 				{/* nav bar */}
 				<div class="nav_bar">
-					<Link class="back_link" to="/">
+					<Link
+						class="back_link"
+						to={{
+							pathname: `/searchArtist`,
+						}}
+					>
 						<img
 							src="https://image.flaticon.com/icons/svg/725/725004.svg"
 							width="30"
@@ -112,10 +136,8 @@ class savedArtist extends Component {
 													{/* view button  */}
 													<Link
 														class="fansNum d-inline-block w-50 text-center px-2"
-														// target="_blank"
 														to={{
 															pathname: `/eachArtist/${item.ID},${item.Name}`,
-															state: { previous_path: '/savedArtist/' } 
 														}}
 													>
 														<Button variant="primary" size="sm" block>
@@ -127,7 +149,11 @@ class savedArtist extends Component {
 													<div class="fansNum d-inline-block w-50 text-center px-2">
 														<Button
 															onClick={() => {
-																if (window.confirm("Delete this artist from bookmark?")) {
+																if (
+																	window.confirm(
+																		"Delete this artist from bookmark?"
+																	)
+																) {
 																	this.deleteArtist(item.ID);
 																}
 															}}

@@ -67,7 +67,7 @@ class register extends Component {
 						this.refs.email.value = "";
 						this.refs.psw.value = "";
 						this.refs.cpsw.value = "";
-                        alert("Register Successful");
+						alert("Register Successful");
 					})
 					.catch((error) => {
 						alert("Register failed");
@@ -152,6 +152,10 @@ class register extends Component {
 							/>
 						</form>
 						<br />
+						{/* Login link */}
+						<Link to="/login">
+							<p class="text-center">Already have an account? Login here</p>
+						</Link>
 					</div>
 				</div>
 			</div>

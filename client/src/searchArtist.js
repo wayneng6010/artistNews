@@ -26,10 +26,29 @@ class searchArtist extends Component {
 	}
 
 	// signals that the all components have rendered properly
-	componentDidMount() {
-	}
+	componentDidMount() {}
 
 	startup = async () => {
+		// verify token
+		const query_verify = `/verifyToken`;
+		console.log(query_verify);
+		await axios
+			.get(query_verify)
+			.then((result) => {
+				// alert(result.data);
+				if (
+					result.data === "Access Denied" ||
+					result.data === "Invalid Token"
+				) {
+					alert("You are not logged in");
+					window.location.href = "/login";
+				}
+			})
+			.catch((error) => {
+				alert(error);
+			});
+
+		// get artist
 		const query = `/getArtist?artist_search=${this.state.search}&order=${this.state.sortBy}`;
 		console.log(query);
 		await axios
@@ -39,14 +58,18 @@ class searchArtist extends Component {
 				this.setState({ isLoaded: true, items: result.data.data });
 			})
 			.catch((error) => {
-				alert("Error: ", error);
+				if (error.toString() === "Error: Request failed with status code 401") {
+					alert("Access Denied");
+				} else {
+					alert(error);
+				}
 			});
 	};
 
 	sort_artist = (event) => {
 		this.state.sortBy = event.target.value;
 		this.startup();
-	}
+	};
 
 	handleSubmit = async (e) => {
 		e.preventDefault();
@@ -97,26 +120,24 @@ class searchArtist extends Component {
 	render() {
 		var { isLoaded, items } = this.state;
 
-		// if (!isLoaded) {
-		// 	return <div>Loading...</div>;
-		// }
-
 		return (
 			<div className="App">
 				{/* Header */}
 				<div class="header">
 					<div>
-						{/* Register button */}
-						<Link to="/register">
-							<button class="manage_btn register btn btn-primary btn-lg">
-								Register
-							</button>
-						</Link>
 						{/* Manage button */}
-						<Link to="/savedArtist">
-							<button class="manage_btn btn btn-success btn-lg">
+						<Link
+							to={{
+								pathname: `/savedArtist`,
+							}}
+						>
+							<button class="manage_btn register btn btn-success btn-lg">
 								Manage
 							</button>
+						</Link>
+						{/* Logout button */}
+						<Link to="/logout">
+							<button class="manage_btn btn btn-danger btn-lg">Logout</button>
 						</Link>
 						{/* Page title */}
 						<h1 class="m-0 p-0">Artist and News API</h1>
@@ -221,7 +242,7 @@ class searchArtist extends Component {
 						<Link
 							to={{
 								pathname: `/eachArtist/${item.id},${item.name}`,
-								state: { previous_path: "/" },
+								state: { previous_path: "/searchArtist" },
 							}}
 						>
 							<div class="item eachArtist" key={item.id}>

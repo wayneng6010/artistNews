@@ -10,12 +10,9 @@ const jwt = require("jsonwebtoken");
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
-// verify user token
-const verify = require("./verifyToken");
-
 //calling API
 //localhost:5000/getArtist?artist_search=artistName
-app.get("/getArtist", verify, (req, res) => {
+app.get("/getArtist", (req, res) => {
 	const artist_search =
 		req.query.artist_search == "" ? "smith" : req.query.artist_search;
 
@@ -83,7 +80,7 @@ app.get("/saveArtist", (req, res) => {
 				PictureURL: response.data.picture_medium,
 				AlbumNum: response.data.nb_album,
 				FansNum: response.data.nb_fan,
-				UserID: req.cookies['uid'],
+				UserID: req.cookies["uid"],
 			});
 
 			artist
@@ -94,8 +91,6 @@ app.get("/saveArtist", (req, res) => {
 				.catch((error) => {
 					res.status(400).json(error);
 				});
-
-			
 		})
 		.catch((error) => {
 			res.status(400).json(error);
@@ -104,7 +99,7 @@ app.get("/saveArtist", (req, res) => {
 
 //localhost:5000/getAllArtist
 app.get("/getAllArtist", (req, res) => {
-	Artist.find({ UserID: req.cookies['uid'] })
+	Artist.find({ UserID: req.cookies["uid"] })
 		.then((response) => {
 			res.status(200).json(response);
 		})
@@ -201,12 +196,32 @@ app.post("/login", async (req, res) => {
 	// save token and user id to cookie
 	res.cookie("auth-token", token);
 	res.cookie("uid", user._id);
+	res.cookie("uname", user.name);
 	res.send(true);
 });
 
 app.post("/logout", async (req, res) => {
 	// clear auth-token cookie and user id cookie
-	res.clearCookie("auth-token").clearCookie("uid");
+	res.clearCookie("auth-token").clearCookie("uid").clearCookie("uname").send(true);
+});
+
+app.get("/verifyToken", (req, res) => {
+	const token = req.cookies["auth-token"];
+	console.log(req.cookies["uid"]);
+	if (!token) {
+		console.log("Access Denied");
+		return res.send("Access Denied");
+		// return res.redirect('/');
+	}
+	try {
+		const verified = jwt.verify(token, "vE7YWqEuJQOXjlKxU7e4SOl");
+		req.user = verified;
+		return res.send("Access Granted");
+		// next(); // continue to next middleware
+	} catch (err) {
+		console.log("Invalid token");
+		return res.send("Invalid token");
+	}
 });
 
 // heroku

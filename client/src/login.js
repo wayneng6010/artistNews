@@ -40,8 +40,9 @@ class login extends Component {
 			})
 			.then((jsonData) => {
 				console.log(jsonData);
-				if(jsonData) {
+				if (jsonData) {
 					alert("Login successful");
+					window.location.href = "/searchArtist";
 				} else {
 					alert("Email or password is incorrect");
 				}
@@ -105,6 +106,10 @@ class login extends Component {
 							/>
 						</form>
 						<br />
+						{/* Register link */}
+						<Link to="/register">
+							<p class="text-center">Does not have an account? Register here</p>
+						</Link>
 					</div>
 				</div>
 			</div>

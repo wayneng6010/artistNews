@@ -5,8 +5,8 @@ var app = express();
 app.use(cookieParser());
 
 module.exports = function (req, res, next) {
-	const token = req.cookies['auth-token'];
-	console.log(req.cookies['uid']);
+	const token = req.cookies["auth-token"];
+	console.log(req.cookies["uid"]);
 	if (!token) {
 		console.log("Access Denied");
 		return res.status(401).send("Access Denied");
