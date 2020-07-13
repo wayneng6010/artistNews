@@ -9,6 +9,9 @@ import { Link } from "react-router-dom";
 class logout extends Component {
 	constructor() {
 		super();
+		this.state = {
+			previous_path: null,
+		};
 	}
 
 	logout = async () => {
@@ -23,7 +26,7 @@ class logout extends Component {
 			})
 			.then((jsonData) => {
 				console.log(jsonData);
-				if(jsonData) {
+				if (jsonData) {
 					alert("Logout successful");
 					window.location.href = "/";
 				} else {
@@ -37,7 +40,12 @@ class logout extends Component {
 	};
 
 	componentDidMount = async () => {
-		this.logout();
+		this.state.previous_path = this.props.location.state.previous_path;;
+		if (window.confirm("Confirm to logout?")) {
+			this.logout();
+		} else {
+			window.location.href = this.state.previous_path;
+		}
 	};
 
 	render() {

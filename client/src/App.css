@@ -51,6 +51,14 @@
 	right: 300px;
 }
 
+.manage_btn.small {
+	top: 5px;
+	right: 5%;
+	font-size: 18px;
+	width: 150px;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
 .header {
 	background-image: url(https://thumbs.gfycat.com/PolishedFarawayElk-size_restricted.gif);
 	background-repeat: no-repeat;
@@ -241,9 +249,9 @@ a.a_item:hover,
 }
 
 #manage_btn2 {
-	height: 40px;
+	height: 37px;
+	right: 270px;
 	line-height: 0.6;
-	margin-top: -8px;
 }
 
 #manage_btn2_outer {

@@ -136,7 +136,12 @@ class searchArtist extends Component {
 							</button>
 						</Link>
 						{/* Logout button */}
-						<Link to="/logout">
+						<Link
+							to={{
+								pathname: `/logout`,
+								state: { previous_path: "/searchArtist" },
+							}}
+						>
 							<button class="manage_btn btn btn-danger btn-lg">Logout</button>
 						</Link>
 						{/* Page title */}

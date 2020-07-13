@@ -3,12 +3,14 @@ import "./App.css";
 import axios from "axios";
 import Popup from "react-popup";
 import "./Popup.css";
+import { useState } from "react";
 
 // link this page to another page
 import { Link } from "react-router-dom";
 
 // import bootstrap component
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 // Page for showing the recipe detail for selected food recipe with ingredients and publisher link
 class savedArtist extends Component {
@@ -16,6 +18,7 @@ class savedArtist extends Component {
 		super();
 		this.state = {
 			saved_artist: [],
+			modal_show: false,
 		};
 	}
 
@@ -48,6 +51,23 @@ class savedArtist extends Component {
 			.catch((error) => {
 				alert("Error: ", error);
 			});
+	};
+
+	handleModal = () => {
+		this.setState({ modal_show: !this.state.modal_show });
+	};
+
+	editArtistPhoto = (artist_id) => {
+		// alert("Edit");
+		// const query = `/deleteArtist?artist_id=${artist_id}`;
+		// axios
+		// 	.get(query)
+		// 	.then((result) => {
+		// 		this.getAllArtist();
+		// 	})
+		// 	.catch((error) => {
+		// 		alert("Error: ", error);
+		// 	});
 	};
 
 	componentDidMount = async () => {
@@ -93,6 +113,17 @@ class savedArtist extends Component {
 						/>
 					</Link>
 					<div class="page_title">Bookmark</div>
+					{/* Logout button */}
+					<Link
+						to={{
+							pathname: `/logout`,
+							state: { previous_path: "/savedArtist" },
+						}}
+					>
+						<button class="manage_btn small btn btn-danger btn-sm">
+							Logout
+						</button>
+					</Link>
 				</div>
 				{/* content */}
 				<div id="eachArtist_content">
@@ -109,12 +140,33 @@ class savedArtist extends Component {
 									saved_artist.map((item) => (
 										<div class="item eachArtist eachSavedArtist" key={item.ID}>
 											<img
-												class="item_head"
+												class="item_head saved"
 												src={item.PictureURL}
 												width="100%"
 												height="auto"
 												alt="Artist Image"
+												onClick={() => {
+													// this.editArtistPhoto(item.ID);
+													this.handleModal();
+												}}
 											/>
+											<Modal show={this.state.modal_show}>
+												<Modal.Header>
+													<Modal.Title>Hi</Modal.Title>
+												</Modal.Header>
+												<Modal.Body>The body</Modal.Body>
+												<Modal.Footer>
+													<button
+														onClick={() => {
+															this.handleModal();
+														}}
+													>
+														Cancel
+													</button>
+													<button>Save</button>
+												</Modal.Footer>
+											</Modal>
+
 											<div class="item_body_outer eachSavedArtist">
 												<div class="item_body">
 													<h5 class="name mb-4 text-center">

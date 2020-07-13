@@ -191,9 +191,20 @@ class eachArtist extends Component {
 						<button
 							id="manage_btn2"
 							variant="light"
-							class="btn btn-success btn-lg"
+							class="manage_btn small btn btn-success btn-sm"
 						>
 							Manage
+						</button>
+					</Link>
+					{/* Logout button */}
+					<Link
+						to={{
+							pathname: `/logout`,
+							state: { previous_path: `/eachArtist/${artist_id},${artist_name}` },
+						}}
+					>
+						<button class="manage_btn small btn btn-danger btn-sm">
+							Logout
 						</button>
 					</Link>
 				</div>

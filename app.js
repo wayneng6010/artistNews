@@ -111,7 +111,7 @@ app.get("/getAllArtist", (req, res) => {
 
 //localhost:5000/getSameArtist
 app.get("/getSameArtist", (req, res) => {
-	Artist.findOne({ ID: req.query.artist_id })
+	Artist.findOne({ ID: req.query.artist_id, UserID: req.cookies["uid"] })
 		.then((response) => {
 			if (response) {
 				res.send(true);
