@@ -5,6 +5,7 @@ const Artist = require("./Artist").Artist;
 const User = require("./Artist").User;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+var path = require('path');
 
 // cookie parser
 var cookieParser = require("cookie-parser");
