@@ -19,6 +19,10 @@ class savedArtist extends Component {
 		this.state = {
 			saved_artist: [],
 			modal_show: false,
+			edit_id: null,
+			edit_name: null,
+			imgurl: "",
+			username: null,
 		};
 	}
 
@@ -34,7 +38,9 @@ class savedArtist extends Component {
 					this.setState({ saved_artist: "none" });
 					return;
 				}
-				this.setState({ saved_artist: result.data });
+				this.setState({
+					saved_artist: result.data,
+				});
 			})
 			.catch((error) => {
 				alert("Error: ", error);
@@ -53,21 +59,45 @@ class savedArtist extends Component {
 			});
 	};
 
-	handleModal = () => {
-		this.setState({ modal_show: !this.state.modal_show });
+	handleModal = (record_id, artist_name) => {
+		this.setState({
+			modal_show: !this.state.modal_show,
+			edit_id: record_id,
+			edit_name: artist_name,
+		});
 	};
 
-	editArtistPhoto = (artist_id) => {
-		// alert("Edit");
-		// const query = `/deleteArtist?artist_id=${artist_id}`;
-		// axios
-		// 	.get(query)
-		// 	.then((result) => {
-		// 		this.getAllArtist();
-		// 	})
-		// 	.catch((error) => {
-		// 		alert("Error: ", error);
-		// 	});
+	handleChange = (e) => {
+		this.setState({
+			imgurl: e.target.value,
+		});
+	};
+
+	editArtistPhoto = () => {
+		if (
+			this.state.imgurl ===
+			"https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+		) {
+			alert("Invalid image URL");
+		} else {
+			const query = `/updateArtistImage?record_id=${this.state.edit_id}&image_url=${this.state.imgurl}`;
+			axios
+				.get(query)
+				.then((result) => {
+					if (result.data) {
+						alert("Artist image has been updated");
+						this.setState({
+							modal_show: !this.state.modal_show,
+						});
+						this.getAllArtist();
+					} else {
+						alert("Artist image failed to update");
+					}
+				})
+				.catch((error) => {
+					alert("Error: ", error);
+				});
+		}
 	};
 
 	componentDidMount = async () => {
@@ -77,7 +107,6 @@ class savedArtist extends Component {
 		await axios
 			.get(query_verify)
 			.then((result) => {
-				// alert(result.data);
 				if (
 					result.data === "Access Denied" ||
 					result.data === "Invalid Token"
@@ -90,11 +119,24 @@ class savedArtist extends Component {
 				alert(error);
 			});
 
+		// get user name
+		const query_uname = `/getUserName`;
+		console.log(query_uname);
+		await axios
+			.get(query_uname)
+			.then((result) => {
+				console.log(result);
+				this.setState({ username: result.data });
+			})
+			.catch((error) => {
+				alert(error);
+			});
+
 		this.getAllArtist();
 	};
 
 	render() {
-		var saved_artist = this.state.saved_artist;
+		var { saved_artist, username, edit_id, edit_name, imgurl } = this.state;
 
 		return (
 			<div id="eachArtist_body" class="pb-3">
@@ -113,6 +155,8 @@ class savedArtist extends Component {
 						/>
 					</Link>
 					<div class="page_title">Bookmark</div>
+					{/* Show user name */}
+					<span class="manage_btn username_1">Logged in as {username}</span>
 					{/* Logout button */}
 					<Link
 						to={{
@@ -138,32 +182,59 @@ class savedArtist extends Component {
 									<h5>No saved artist at the moment</h5>
 								) : (
 									saved_artist.map((item) => (
-										<div class="item eachArtist eachSavedArtist" key={item.ID}>
+										<div class="item eachArtist eachSavedArtist" key={item._id}>
 											<img
 												class="item_head saved"
 												src={item.PictureURL}
 												width="100%"
-												height="auto"
+												height="290"
 												alt="Artist Image"
 												onClick={() => {
-													// this.editArtistPhoto(item.ID);
-													this.handleModal();
+													this.handleModal(item._id, item.Name);
 												}}
 											/>
 											<Modal show={this.state.modal_show}>
 												<Modal.Header>
-													<Modal.Title>Hi</Modal.Title>
+													<Modal.Title>
+														Upload a new photo for {edit_name}
+													</Modal.Title>
 												</Modal.Header>
-												<Modal.Body>The body</Modal.Body>
+												<Modal.Body>
+													<input
+														type="text"
+														placeholder="URL of image"
+														onChange={this.handleChange}
+													></input>
+													<p></p>
+													<img
+														src={imgurl}
+														onError={() => {
+															this.setState({
+																imgurl:
+																	"https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png",
+															});
+														}}
+														width="100%"
+													/>
+												</Modal.Body>
 												<Modal.Footer>
-													<button
+													<Button
+														variant="secondary"
 														onClick={() => {
 															this.handleModal();
 														}}
 													>
 														Cancel
-													</button>
-													<button>Save</button>
+													</Button>
+													<Button
+														variant="primary"
+														onClick={() => {
+															this.editArtistPhoto();
+															// this.handleModal(item._id, item.Name);
+														}}
+													>
+														Save
+													</Button>
 												</Modal.Footer>
 											</Modal>
 

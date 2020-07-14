@@ -68,6 +68,7 @@ class register extends Component {
 						this.refs.psw.value = "";
 						this.refs.cpsw.value = "";
 						alert("Register Successful");
+						window.location.href = "/login";
 					})
 					.catch((error) => {
 						alert("Register failed");

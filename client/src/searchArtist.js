@@ -18,6 +18,7 @@ class searchArtist extends Component {
 			isLoaded: false,
 			search: "",
 			sortBy: "",
+			username: "",
 		};
 
 		// this perform a search with predefined value when user enter this page
@@ -43,6 +44,19 @@ class searchArtist extends Component {
 					alert("You are not logged in");
 					window.location.href = "/login";
 				}
+			})
+			.catch((error) => {
+				alert(error);
+			});
+
+		// get user name
+		const query_uname = `/getUserName`;
+		console.log(query_uname);
+		await axios
+			.get(query_uname)
+			.then((result) => {
+				console.log(result);
+				this.setState({ username: result.data });
 			})
 			.catch((error) => {
 				alert(error);
@@ -118,13 +132,15 @@ class searchArtist extends Component {
 	};
 
 	render() {
-		var { isLoaded, items } = this.state;
+		var { isLoaded, items, username } = this.state;
 
 		return (
 			<div className="App">
 				{/* Header */}
 				<div class="header">
 					<div>
+						{/* Show user name */}
+						<span class="manage_btn username">Logged in as {username}</span>
 						{/* Manage button */}
 						<Link
 							to={{

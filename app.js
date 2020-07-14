@@ -5,7 +5,7 @@ const Artist = require("./Artist").Artist;
 const User = require("./Artist").User;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-var path = require('path');
+var path = require("path");
 
 // cookie parser
 var cookieParser = require("cookie-parser");
@@ -109,6 +109,24 @@ app.get("/getAllArtist", (req, res) => {
 		});
 });
 
+//localhost:5000/updateArtistImage?imageurl=imageURL
+app.get("/updateArtistImage", (req, res) => {
+	const record_id = req.query.record_id;
+	const image_url = req.query.image_url;
+	console.log("record:",record_id);
+	console.log("url:", image_url);
+
+	Artist.findOneAndUpdate(
+		{ _id: record_id },
+		{ $set: { PictureURL: image_url } },
+		{ new: true },
+		(err, place) => {
+			if (err) return res.send(false);
+			return res.send(true);
+		}
+	);
+});
+
 //localhost:5000/getSameArtist
 app.get("/getSameArtist", (req, res) => {
 	Artist.findOne({ ID: req.query.artist_id, UserID: req.cookies["uid"] })
@@ -203,7 +221,11 @@ app.post("/login", async (req, res) => {
 
 app.post("/logout", async (req, res) => {
 	// clear auth-token cookie and user id cookie
-	res.clearCookie("auth-token").clearCookie("uid").clearCookie("uname").send(true);
+	res
+		.clearCookie("auth-token")
+		.clearCookie("uid")
+		.clearCookie("uname")
+		.send(true);
 });
 
 app.get("/verifyToken", (req, res) => {
@@ -223,6 +245,11 @@ app.get("/verifyToken", (req, res) => {
 		console.log("Invalid token");
 		return res.send("Invalid token");
 	}
+});
+
+app.get("/getUserName", (req, res) => {
+	const username = req.cookies["uname"];
+	res.send(username);
 });
 
 // heroku

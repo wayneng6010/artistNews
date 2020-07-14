@@ -51,6 +51,33 @@
 	right: 300px;
 }
 
+.manage_btn.username {
+	right: 540px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border: 2px solid white;
+	height: 50px;
+	border-radius: 10px;
+	color: white;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 3;
+}
+
+.manage_btn.username_1 {
+	box-shadow: none;
+	margin-top: -23px;
+	text-align: center;
+	right: 290px;
+	border-radius: 10px;
+	width: 200px;
+	padding: 5px 7px;
+	border: 1px solid black;
+}
+
+.manage_btn.username_1.username_2 {
+	right: 450px;
+}
+
 .manage_btn.small {
 	top: 5px;
 	right: 5%;
@@ -388,4 +415,21 @@ a.a_item:hover,
 #sortby_row,
 #language_row {
 	height: 40px;
+}
+
+div.modal-dialog {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div.modal-content {
+	width: 800px;
+}
+
+div.modal-body input {
+	width: 100%;
+	border: 2px solid grey;
+	border-radius: 10px;
+	padding: 5px 10px;
 }

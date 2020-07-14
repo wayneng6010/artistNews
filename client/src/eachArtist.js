@@ -22,6 +22,7 @@ class eachArtist extends Component {
 			related_news: [],
 			sortBy: "relevancy",
 			language: "",
+			username: null,
 		};
 	}
 
@@ -156,6 +157,19 @@ class eachArtist extends Component {
 				alert(error);
 			});
 
+		// get user name
+		const query_uname = `/getUserName`;
+		console.log(query_uname);
+		await axios
+			.get(query_uname)
+			.then((result) => {
+				console.log(result);
+				this.setState({ username: result.data });
+			})
+			.catch((error) => {
+				alert(error);
+			});
+
 		this.state.artist_id = this.props.match.params.artist_id;
 		this.state.artist_name = this.props.match.params.artist_name;
 		this.getTopTracks();
@@ -163,7 +177,13 @@ class eachArtist extends Component {
 	};
 
 	render() {
-		var { artist_name, artist_id, top_tracks, related_news } = this.state;
+		var {
+			artist_name,
+			artist_id,
+			top_tracks,
+			related_news,
+			username,
+		} = this.state;
 		return (
 			<div id="eachArtist_body" class="pb-3">
 				{/* nav bar */}
@@ -181,6 +201,10 @@ class eachArtist extends Component {
 						/>
 					</Link>
 					<div class="page_title">{artist_name}</div>
+					{/* Show user name */}
+					<span class="manage_btn username_1 username_2">
+						Logged in as {username}
+					</span>
 					{/* Manage button */}
 					<Link
 						class="manage_btn2_outer"
@@ -200,7 +224,9 @@ class eachArtist extends Component {
 					<Link
 						to={{
 							pathname: `/logout`,
-							state: { previous_path: `/eachArtist/${artist_id},${artist_name}` },
+							state: {
+								previous_path: `/eachArtist/${artist_id},${artist_name}`,
+							},
 						}}
 					>
 						<button class="manage_btn small btn btn-danger btn-sm">
