@@ -23,20 +23,16 @@ class searchArtist extends Component {
 
 		// this perform a search with predefined value when user enter this page
 		this.startup();
-		// this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	// signals that the all components have rendered properly
-	componentDidMount() {}
-
-	startup = async () => {
+	componentDidMount = async () => {
 		// verify token
 		const query_verify = `/verifyToken`;
 		console.log(query_verify);
 		await axios
 			.get(query_verify)
 			.then((result) => {
-				// alert(result.data);
 				if (
 					result.data === "Access Denied" ||
 					result.data === "Invalid Token"
@@ -61,7 +57,9 @@ class searchArtist extends Component {
 			.catch((error) => {
 				alert(error);
 			});
+	};
 
+	startup = async () => {
 		// get artist
 		const query = `/getArtist?artist_search=${this.state.search}&order=${this.state.sortBy}`;
 		console.log(query);
@@ -69,18 +67,15 @@ class searchArtist extends Component {
 			.get(query)
 			.then((result) => {
 				console.log(result);
-				this.setState({ isLoaded: true, items: result.data.data });
+				this.setState({ isLoaded: true, items: result.data.data }); // stop loading spinner, store response data in items state
 			})
 			.catch((error) => {
-				if (error.toString() === "Error: Request failed with status code 401") {
-					alert("Access Denied");
-				} else {
-					alert(error);
-				}
+				alert(error);
 			});
 	};
 
 	sort_artist = (event) => {
+		// get user chosen sort by option
 		this.state.sortBy = event.target.value;
 		this.startup();
 	};
@@ -92,7 +87,7 @@ class searchArtist extends Component {
 			Popup.alert("Empty input");
 			return;
 		} else {
-			this.setState({ isLoaded: false });
+			this.setState({ isLoaded: false }); // loading spinner starts spinning
 		}
 		const query = `/getArtist?artist_search=${this.state.search}`;
 		console.log(query);
@@ -115,10 +110,10 @@ class searchArtist extends Component {
 							" -> " +
 							result.data.error.message
 					);
-					this.setState({ isLoaded: true });
+					this.setState({ isLoaded: true }); // stop loading spinner
 					return;
 				}
-				this.setState({ isLoaded: true, items: result.data.data });
+				this.setState({ isLoaded: true, items: result.data.data }); // stop loading spinner, store response data in items state
 			})
 			.catch((error) => {
 				console.log(error);
@@ -261,6 +256,7 @@ class searchArtist extends Component {
 					{/* loop through array of objects */}
 					{items.map((item) => (
 						<Link
+							// set parameter artist id and artist name in path
 							to={{
 								pathname: `/eachArtist/${item.id},${item.name}`,
 								state: { previous_path: "/searchArtist" },

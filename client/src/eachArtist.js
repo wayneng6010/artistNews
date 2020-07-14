@@ -50,7 +50,7 @@ class eachArtist extends Component {
 					);
 					return;
 				}
-				this.setState({ top_tracks: result.data.data });
+				this.setState({ top_tracks: result.data.data }); // store response data in top_tracks state
 			})
 			.catch((error) => {
 				alert("Error: ", error);
@@ -65,10 +65,12 @@ class eachArtist extends Component {
 			.get(query_related_news)
 			.then((result) => {
 				console.log(result);
+				// no result
 				if (result.data.totalResults === 0) {
 					this.setState({ related_news: "none" });
 					return;
 				}
+				// error
 				if (result.data.status === "error") {
 					Popup.alert(
 						"Error: " + result.data.code + " -> " + result.data.message
@@ -76,8 +78,7 @@ class eachArtist extends Component {
 					this.setState({ related_news: "none" });
 					return;
 				}
-				this.setState({ related_news: result.data.articles });
-				// alert(JSON.stringify(this.state.top_tracks[0].preview));
+				this.setState({ related_news: result.data.articles }); // store response data in related_news state
 			})
 			.catch((error) => {
 				alert("Error: ", error);
@@ -127,12 +128,14 @@ class eachArtist extends Component {
 
 	// language
 	filter_news = (event) => {
+		// get user chosen filter language option
 		this.state.language = event.target.value;
 		this.getRelatedNews();
 	};
 
 	// sort by
 	sort_news = (event) => {
+		// get user chosen sort by option
 		this.state.sortBy = event.target.value;
 		this.getRelatedNews();
 	};
@@ -170,6 +173,7 @@ class eachArtist extends Component {
 				alert(error);
 			});
 
+		// get artist id and name
 		this.state.artist_id = this.props.match.params.artist_id;
 		this.state.artist_name = this.props.match.params.artist_name;
 		this.getTopTracks();

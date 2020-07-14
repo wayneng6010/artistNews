@@ -3,7 +3,6 @@ import "./App.css";
 import axios from "axios";
 import Popup from "react-popup";
 import "./Popup.css";
-import { useState } from "react";
 
 // link this page to another page
 import { Link } from "react-router-dom";
@@ -52,7 +51,7 @@ class savedArtist extends Component {
 		axios
 			.get(query)
 			.then((result) => {
-				this.getAllArtist();
+				this.getAllArtist(); // refresh saved artist
 			})
 			.catch((error) => {
 				alert("Error: ", error);
@@ -74,6 +73,7 @@ class savedArtist extends Component {
 	};
 
 	editArtistPhoto = () => {
+		// validate the image url 
 		if (
 			this.state.imgurl ===
 			"https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
@@ -87,9 +87,10 @@ class savedArtist extends Component {
 					if (result.data) {
 						alert("Artist image has been updated");
 						this.setState({
-							modal_show: !this.state.modal_show,
+							modal_show: !this.state.modal_show, // make the bootstrap modal disappear 
+							imgurl: "",
 						});
-						this.getAllArtist();
+						this.getAllArtist(); // refresh saved artist
 					} else {
 						alert("Artist image failed to update");
 					}
@@ -189,10 +190,15 @@ class savedArtist extends Component {
 												width="100%"
 												height="290"
 												alt="Artist Image"
-												onClick={() => {
-													this.handleModal(item._id, item.Name);
-												}}
 											/>
+											<div
+												class="changeImage_btn"
+												onClick={() => {
+													this.handleModal(item._id, item.Name); // item id indicate which artist is currently editing
+												}}
+											>
+												Change image
+											</div>
 											<Modal show={this.state.modal_show}>
 												<Modal.Header>
 													<Modal.Title>
@@ -230,7 +236,6 @@ class savedArtist extends Component {
 														variant="primary"
 														onClick={() => {
 															this.editArtistPhoto();
-															// this.handleModal(item._id, item.Name);
 														}}
 													>
 														Save

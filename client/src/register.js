@@ -62,11 +62,6 @@ class register extends Component {
 				})
 					.then((result) => {
 						console.log(result);
-						// clear form input
-						this.refs.name.value = "";
-						this.refs.email.value = "";
-						this.refs.psw.value = "";
-						this.refs.cpsw.value = "";
 						alert("Register Successful");
 						window.location.href = "/login";
 					})

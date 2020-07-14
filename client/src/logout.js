@@ -40,7 +40,7 @@ class logout extends Component {
 	};
 
 	componentDidMount = async () => {
-		this.state.previous_path = this.props.location.state.previous_path;;
+		this.state.previous_path = this.props.location.state.previous_path;
 		if (window.confirm("Confirm to logout?")) {
 			this.logout();
 		} else {

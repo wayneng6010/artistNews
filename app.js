@@ -14,9 +14,11 @@ app.use(cookieParser());
 //calling API
 //localhost:5000/getArtist?artist_search=artistName
 app.get("/getArtist", (req, res) => {
+	// default value "smith" for startup search
 	const artist_search =
 		req.query.artist_search == "" ? "smith" : req.query.artist_search;
 
+	// sort option
 	const order = req.query.order;
 
 	const querystr = `https://api.deezer.com/search/artist?q=${artist_search}&order=${order}`;
@@ -66,6 +68,21 @@ app.get("/getArtistRelatedNews", (req, res) => {
 		});
 });
 
+//localhost:5000/getSameArtist
+app.get("/getSameArtist", (req, res) => {
+	Artist.findOne({ ID: req.query.artist_id, UserID: req.cookies["uid"] })
+		.then((response) => {
+			if (response) {
+				res.send(true);
+			} else {
+				res.send(false);
+			}
+		})
+		.catch((error) => {
+			res.status(400).json(error);
+		});
+});
+
 //localhost:5000/saveArtist?artist_id=artistID
 app.get("/saveArtist", (req, res) => {
 	const artist_id = req.query.artist_id;
@@ -81,7 +98,7 @@ app.get("/saveArtist", (req, res) => {
 				PictureURL: response.data.picture_medium,
 				AlbumNum: response.data.nb_album,
 				FansNum: response.data.nb_fan,
-				UserID: req.cookies["uid"],
+				UserID: req.cookies["uid"], // identify saved artist belong to which user
 			});
 
 			artist
@@ -113,7 +130,7 @@ app.get("/getAllArtist", (req, res) => {
 app.get("/updateArtistImage", (req, res) => {
 	const record_id = req.query.record_id;
 	const image_url = req.query.image_url;
-	console.log("record:",record_id);
+	console.log("record:", record_id);
 	console.log("url:", image_url);
 
 	Artist.findOneAndUpdate(
@@ -125,22 +142,6 @@ app.get("/updateArtistImage", (req, res) => {
 			return res.send(true);
 		}
 	);
-});
-
-//localhost:5000/getSameArtist
-app.get("/getSameArtist", (req, res) => {
-	Artist.findOne({ ID: req.query.artist_id, UserID: req.cookies["uid"] })
-		.then((response) => {
-			if (response) {
-				res.send(true);
-			} else {
-				res.send(false);
-			}
-			// res.status(200).json(response);
-		})
-		.catch((error) => {
-			res.status(400).json(error);
-		});
 });
 
 //localhost:5000/deleteArtist?title=MovieTitle
@@ -231,16 +232,18 @@ app.post("/logout", async (req, res) => {
 app.get("/verifyToken", (req, res) => {
 	const token = req.cookies["auth-token"];
 	console.log(req.cookies["uid"]);
+
+	// if dont have the token
 	if (!token) {
 		console.log("Access Denied");
 		return res.send("Access Denied");
-		// return res.redirect('/');
 	}
 	try {
+		// verify token
 		const verified = jwt.verify(token, "vE7YWqEuJQOXjlKxU7e4SOl");
+		// store user ID and time of token issued to indicate that the user is authenticated
 		req.user = verified;
 		return res.send("Access Granted");
-		// next(); // continue to next middleware
 	} catch (err) {
 		console.log("Invalid token");
 		return res.send("Invalid token");
