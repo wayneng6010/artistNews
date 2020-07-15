@@ -142,6 +142,7 @@ class eachArtist extends Component {
 
 	componentDidMount = async () => {
 		// verify token
+		var verify;
 		const query_verify = `/verifyToken`;
 		console.log(query_verify);
 		await axios
@@ -152,32 +153,37 @@ class eachArtist extends Component {
 					result.data === "Access Denied" ||
 					result.data === "Invalid Token"
 				) {
+					verify = false;
 					alert("You are not logged in");
 					window.location.href = "/login";
+				} else {
+					verify = true;
 				}
 			})
 			.catch((error) => {
 				alert(error);
 			});
 
-		// get user name
-		const query_uname = `/getUserName`;
-		console.log(query_uname);
-		await axios
-			.get(query_uname)
-			.then((result) => {
-				console.log(result);
-				this.setState({ username: result.data });
-			})
-			.catch((error) => {
-				alert(error);
-			});
+		if (verify) {
+			// get user name
+			const query_uname = `/getUserName`;
+			console.log(query_uname);
+			await axios
+				.get(query_uname)
+				.then((result) => {
+					console.log(result);
+					this.setState({ username: result.data });
+				})
+				.catch((error) => {
+					alert(error);
+				});
 
-		// get artist id and name
-		this.state.artist_id = this.props.match.params.artist_id;
-		this.state.artist_name = this.props.match.params.artist_name;
-		this.getTopTracks();
-		this.getRelatedNews();
+			// get artist id and name
+			this.state.artist_id = this.props.match.params.artist_id; // to search for top tracks from api
+			this.state.artist_name = this.props.match.params.artist_name; // to show in header
+			this.getTopTracks();
+			this.getRelatedNews();
+		}
 	};
 
 	render() {

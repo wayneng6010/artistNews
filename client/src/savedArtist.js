@@ -73,7 +73,7 @@ class savedArtist extends Component {
 	};
 
 	editArtistPhoto = () => {
-		// validate the image url 
+		// validate the image url
 		if (
 			this.state.imgurl ===
 			"https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
@@ -87,7 +87,7 @@ class savedArtist extends Component {
 					if (result.data) {
 						alert("Artist image has been updated");
 						this.setState({
-							modal_show: !this.state.modal_show, // make the bootstrap modal disappear 
+							modal_show: !this.state.modal_show, // make the bootstrap modal disappear
 							imgurl: "",
 						});
 						this.getAllArtist(); // refresh saved artist
@@ -103,6 +103,7 @@ class savedArtist extends Component {
 
 	componentDidMount = async () => {
 		// verify token
+		var verify;
 		const query_verify = `/verifyToken`;
 		console.log(query_verify);
 		await axios
@@ -112,28 +113,33 @@ class savedArtist extends Component {
 					result.data === "Access Denied" ||
 					result.data === "Invalid Token"
 				) {
+					verify = false;
 					alert("You are not logged in");
 					window.location.href = "/login";
+				} else {
+					verify = true;
 				}
 			})
 			.catch((error) => {
 				alert(error);
 			});
+			
+		if (verify) {
+			// get user name
+			const query_uname = `/getUserName`;
+			console.log(query_uname);
+			await axios
+				.get(query_uname)
+				.then((result) => {
+					console.log(result);
+					this.setState({ username: result.data });
+				})
+				.catch((error) => {
+					alert(error);
+				});
 
-		// get user name
-		const query_uname = `/getUserName`;
-		console.log(query_uname);
-		await axios
-			.get(query_uname)
-			.then((result) => {
-				console.log(result);
-				this.setState({ username: result.data });
-			})
-			.catch((error) => {
-				alert(error);
-			});
-
-		this.getAllArtist();
+			this.getAllArtist();
+		}
 	};
 
 	render() {

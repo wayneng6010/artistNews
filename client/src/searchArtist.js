@@ -20,14 +20,12 @@ class searchArtist extends Component {
 			sortBy: "",
 			username: "",
 		};
-
-		// this perform a search with predefined value when user enter this page
-		this.startup();
 	}
 
 	// signals that the all components have rendered properly
 	componentDidMount = async () => {
 		// verify token
+		var verify;
 		const query_verify = `/verifyToken`;
 		console.log(query_verify);
 		await axios
@@ -37,26 +35,34 @@ class searchArtist extends Component {
 					result.data === "Access Denied" ||
 					result.data === "Invalid Token"
 				) {
+					verify = false;
 					alert("You are not logged in");
 					window.location.href = "/login";
+				} else {
+					verify = true;
 				}
 			})
 			.catch((error) => {
 				alert(error);
 			});
 
-		// get user name
-		const query_uname = `/getUserName`;
-		console.log(query_uname);
-		await axios
-			.get(query_uname)
-			.then((result) => {
-				console.log(result);
-				this.setState({ username: result.data });
-			})
-			.catch((error) => {
-				alert(error);
-			});
+		if (verify) {
+			// get user name
+			const query_uname = `/getUserName`;
+			console.log(query_uname);
+			await axios
+				.get(query_uname)
+				.then((result) => {
+					console.log(result);
+					this.setState({ username: result.data });
+				})
+				.catch((error) => {
+					alert(error);
+				});
+
+			// this perform a search with predefined value when user enter this page
+			this.startup();
+		}
 	};
 
 	startup = async () => {
