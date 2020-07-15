@@ -146,7 +146,7 @@ app.get("/updateArtistImage", (req, res) => {
 
 //localhost:5000/deleteArtist?title=MovieTitle
 app.get("/deleteArtist", (req, res) => {
-	Artist.deleteOne({ ID: req.query.artist_id })
+	Artist.deleteOne({ _id: req.query.record_id })
 		.then((response) => {
 			res.status(200).json(response);
 		})
@@ -214,9 +214,9 @@ app.post("/login", async (req, res) => {
 	const token = jwt.sign({ _id: user._id }, "vE7YWqEuJQOXjlKxU7e4SOl");
 
 	// save token and user id to cookie
-	res.cookie("auth-token", token);
-	res.cookie("uid", user._id);
-	res.cookie("uname", user.name);
+	res.cookie("auth-token", token); // to verify if user have login
+	res.cookie("uid", user._id); // while be used while saving artist
+	res.cookie("uname", user.name); // will be display on navigation bar (logged in as UserName)
 	res.send(true);
 });
 

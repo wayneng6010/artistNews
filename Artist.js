@@ -25,7 +25,7 @@ const artistSchema = new mongoose.Schema({
 	UserID: { type: String }, //to identify saved artist of each user
 });
 
-// artist schema
+// user schema
 const userSchema = new mongoose.Schema({
 	name: { type: String },
 	email: { type: String },

@@ -19,6 +19,7 @@ class register extends Component {
 	handleSubmit = async (e) => {
 		e.preventDefault();
 
+		// get form input value
 		const name = this.refs.name.value,
 			email = this.refs.email.value,
 			psw = this.refs.psw.value,

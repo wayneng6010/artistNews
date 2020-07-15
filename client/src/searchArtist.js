@@ -104,7 +104,7 @@ class searchArtist extends Component {
 				// no result
 				if (result.data.total === 0) {
 					Popup.alert("Artist Not Found");
-					this.setState({ isLoaded: true });
+					this.setState({ isLoaded: true }); // stop loading spinner
 					return;
 				}
 				// api error

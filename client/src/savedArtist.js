@@ -26,7 +26,7 @@ class savedArtist extends Component {
 	}
 
 	getAllArtist = () => {
-		// get top tracks
+		// get artist from database
 		const query_saved_artist = `/getAllArtist`;
 		console.log(query_saved_artist);
 		axios
@@ -46,8 +46,8 @@ class savedArtist extends Component {
 			});
 	};
 
-	deleteArtist = (artist_id) => {
-		const query = `/deleteArtist?artist_id=${artist_id}`;
+	deleteArtist = (record_id) => {
+		const query = `/deleteArtist?record_id=${record_id}`;
 		axios
 			.get(query)
 			.then((result) => {
@@ -288,7 +288,7 @@ class savedArtist extends Component {
 																		"Delete this artist from bookmark?"
 																	)
 																) {
-																	this.deleteArtist(item.ID);
+																	this.deleteArtist(item._id);
 																}
 															}}
 															variant="dark"

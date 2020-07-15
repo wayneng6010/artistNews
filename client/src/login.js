@@ -19,9 +19,11 @@ class login extends Component {
 	handleSubmit = async (e) => {
 		e.preventDefault();
 
+		// input value
 		const email = this.refs.email.value,
 			psw = this.refs.psw.value;
 
+		// check login credentials
 		await fetch("/login", {
 			method: "POST",
 			headers: {
